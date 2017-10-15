@@ -1,0 +1,140 @@
+
+Installation
+---------------
+
+  239  curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+  241  sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+  242  apt-get update
+  243  apt-cache policy docker-ce
+  244  apt-get install -y docker-ce
+  245  systemctl status docker
+
++++
+
+  188  sudo usermod -aG docker ${USER}
+  191  sudo su - ${USER}
+  192  id -nG
+
+   79  sudo usermod -aG docker ec2-user
+   80  docker info
+
++++
+
+Running
+----------
+
+$ cat Dockerfile
+# Dockerfile basics
+
+FROM alpine
+
+CMD ["echo", "Hello from alpine"]
+
+$ docker run --name alpine-test alpine-test
+Hello from alpine
+
+$ docker ps -a
+CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                     PORTS               NAMES
+e8a940f09497        alpine-test         "echo 'Hello from ..."   3 seconds ago       Exited (0) 2 seconds ago                       alpine-test
+
++++
+
+$ cat Dockerfile
+# Dockerfile infinite loop
+
+FROM alpine
+
+RUN echo 'while true; do date; sleep 2; done' > /script.sh
+RUN chmod +x /script.sh
+
+CMD /script.sh
+
++++
+
+$ docker build -t alpine-test .
+Sending build context to Docker daemon  2.048kB
+Step 1/4 : FROM alpine
+ ---> 76da55c8019d
+Step 2/4 : RUN echo 'while true; do date; sleep 2; done' > /script.sh
+ ---> Running in 1908348f019d
+ ---> ceab16b18837
+Removing intermediate container 1908348f019d
+Step 3/4 : RUN chmod +x /script.sh
+ ---> Running in 7b0abdc2768c
+ ---> 4863c6ee312a
+Removing intermediate container 7b0abdc2768c
+Step 4/4 : CMD /script.sh
+ ---> Running in 4b57d12e102f
+ ---> c52146779954
+Removing intermediate container 4b57d12e102f
+Successfully built c52146779954
+Successfully tagged alpine-test:latest
+
+$ docker images -a
+REPOSITORY                TAG                 IMAGE ID            CREATED             SIZE
+<none>                    <none>              4863c6ee312a        12 seconds ago      3.97MB
+alpine-test               latest              c52146779954        12 seconds ago      3.97MB
+<none>                    <none>              ceab16b18837        13 seconds ago      3.97MB
+alpine                    latest              76da55c8019d        4 weeks ago         3.97MB
+hello-world               latest              05a3bd381fc2        4 weeks ago         1.84kB
+niladridatta/hello-test   latest              690ed74de00f        2 years ago         960B
+
++++
+
+$ docker run -d  --name alpine-test-date-2 alpine-test
+10477a99d9a2f6d111f462c0619bc1926ab399b6ab458444e8780317aa21e76b
+
+$ docker ps
+CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS               NAMES
+10477a99d9a2        alpine-test         "/bin/sh -c /scrip..."   7 seconds ago       Up 6 seconds                            alpine-test-date-2
+
+$ docker logs 10477a99d9a2
+Sun Oct 15 16:31:18 UTC 2017
+Sun Oct 15 16:31:20 UTC 2017
+Sun Oct 15 16:31:22 UTC 2017
+Sun Oct 15 16:31:24 UTC 2017
+
+$ docker stop 10477a99d9a2
+10477a99d9a2
+
+$ docker rm 10477a99d9a2
+
+$ docker images -a
+REPOSITORY                TAG                 IMAGE ID            CREATED             SIZE
+<none>                    <none>              4863c6ee312a        8 minutes ago       3.97MB
+alpine-test               latest              c52146779954        8 minutes ago       3.97MB
+<none>                    <none>              ceab16b18837        8 minutes ago       3.97MB
+alpine                    latest              76da55c8019d        4 weeks ago         3.97MB
+hello-world               latest              05a3bd381fc2        4 weeks ago         1.84kB
+niladridatta/hello-test   latest              690ed74de00f        2 years ago         960B
+
+$ docker image rm c52146779954
+Untagged: alpine-test:latest
+Deleted: sha256:c5214677995440b41140cfef71b519eccb53dda77c36aaa670ee256eb29a0ce0
+Deleted: sha256:4863c6ee312abea6c4f3681c0545c1966c381fd49ac5c26a00508bff120d9051
+Deleted: sha256:285098c1d4d62653cb17cf85d7b63d39c13482813c06f83af7aa5ca6613d7884
+Deleted: sha256:ceab16b188378af17230870ad325841d0c89584d9ba85d5843201eecabd5bbfa
+Deleted: sha256:bcf0bfada89c0d1a17a15fc8fe4229d1eb66fa2e0c0bbcae669568e8612099a5
+
+$ docker images -a
+REPOSITORY                TAG                 IMAGE ID            CREATED             SIZE
+alpine                    latest              76da55c8019d        4 weeks ago         3.97MB
+hello-world               latest              05a3bd381fc2        4 weeks ago         1.84kB
+niladridatta/hello-test   latest              690ed74de00f        2 years ago         960B
+
++++
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
