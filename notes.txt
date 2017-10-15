@@ -124,17 +124,81 @@ niladridatta/hello-test   latest              690ed74de00f        2 years ago   
 
 +++
 
+$ docker login
+Login with your Docker ID to push and pull images from Docker Hub. If you don't have a Docker ID, head over to https://hub.docker.com to create one.
+Username: niladridatta
+Password:
+Login Succeeded
 
+$ docker build -t alpine-custom .
 
+$ docker images
+REPOSITORY                TAG                 IMAGE ID            CREATED             SIZE
+alpine-custom             latest              aa94d853a73f        7 seconds ago       3.97MB
 
+$ docker tag alpine-custom niladridatta/alpine-custom:cont_loop
 
+$ docker images
+REPOSITORY                   TAG                 IMAGE ID            CREATED             SIZE
+alpine-custom                latest              aa94d853a73f        2 minutes ago       3.97MB
+niladridatta/alpine-custom   cont_loop           aa94d853a73f        2 minutes ago       3.97MB
 
+$ docker push niladridatta/alpine-custom:cont_loop
+The push refers to a repository [docker.io/niladridatta/alpine-custom]
+30047780597a: Pushed
+708c84e9919f: Pushed
+5bef08742407: Mounted from library/alpine
+cont_loop: digest: sha256:33a11a2023cb4c6b4585f945d45b1c6c4a3acf5b575119b59f28a46c606ffece size: 942
 
+$ docker image rm aa94d853a73f -f
+Untagged: alpine-custom:latest
+Untagged: niladridatta/alpine-custom:cont_loop
+Untagged: niladridatta/alpine-custom@sha256:33a11a2023cb4c6b4585f945d45b1c6c4a3acf5b575119b59f28a46c606ffece
+Deleted: sha256:aa94d853a73fec4ce8f900db8e38d6a5f3b7598fe0a42cf5fa536190b1fc9671
+Deleted: sha256:b0294ead58f79e8bbbe6f6923f3dc115d00c33d2b14f53de617af19260649e22
+Deleted: sha256:1726210f0e377cb30aed4ed226cfca30c458adfd63169eb26cb2e599a01c87dd
+Deleted: sha256:2c53ae3a4913e6bbc10e03705ca53bcbc69d5d6d73ee40f50703b63cb6e774da
+Deleted: sha256:c4744e5b1c73dbe657011662ee6dd8658cfaa381f9fc26d0f6c8386a090f3681
 
+$ docker images
+REPOSITORY                TAG                 IMAGE ID            CREATED             SIZE
+alpine                    latest              76da55c8019d        4 weeks ago         3.97MB
 
+$ docker run -d  --name alpine-custom niladridatta/alpine-custom:cont_loop
+Unable to find image 'niladridatta/alpine-custom:cont_loop' locally
+cont_loop: Pulling from niladridatta/alpine-custom
+88286f41530e: Already exists
+429ae513a08a: Pull complete
+5645d017eed8: Pull complete
+Digest: sha256:33a11a2023cb4c6b4585f945d45b1c6c4a3acf5b575119b59f28a46c606ffece
+Status: Downloaded newer image for niladridatta/alpine-custom:cont_loop
+8c4364c8821d1067812a82d48c03756403db642ca7556425d35d745d3a86afa5
 
+$ docker images
+REPOSITORY                   TAG                 IMAGE ID            CREATED             SIZE
+niladridatta/alpine-custom   cont_loop           aa94d853a73f        9 minutes ago       3.97MB
 
+$ docker run -d  --name alpine-custom niladridatta/alpine-custom:cont_loop
+c260dd0428b072d455593d816bc4c9886d5155533ada8783e1138137940437a1
 
+$ docker ps
+CONTAINER ID        IMAGE                                  COMMAND                  CREATED             STATUS              PORTS               NAMES
+c260dd0428b0        niladridatta/alpine-custom:cont_loop   "/bin/sh -c /scrip..."   7 seconds ago       Up 6 seconds                            alpine-custom
 
+$ docker logs c260dd0428b0
 
+$ docker rm c260dd0428b0 -f
+
++++
+
+$ docker pull niladridatta/alpine-custom
+
+$ docker history niladridatta/alpine-custom
+
+$ docker run -it  --name alpine-custom niladridatta/alpine-custom sh
+/ # ls
+bin        etc        lib        mnt        proc       run        script.sh  sys        usr
+dev        home       media      notes      root       sbin       srv        tmp        var
+
++++
 
