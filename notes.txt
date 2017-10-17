@@ -202,3 +202,42 @@ dev        home       media      notes      root       sbin       srv        tmp
 
 +++
 
+root@Ubuntu:~# service docker start
+root@Ubuntu:~# service docker stop
+root@Ubuntu:~# service docker status
+
++++
+
+$ docker container ls
+
+$ docker container stop 1fa4ab2cf395
+
++++
+
+$ docker ps -a
+CONTAINER ID        IMAGE                        COMMAND             CREATED             STATUS                        PORTS               NAMES
+ad53c200194b        niladridatta/alpine-custom   "sh"                32 seconds ago      Exited (130) 11 seconds ago                       alpine-custom
+
+ec2-user@Ubuntu:~/Docker/alpine-test$ docker ps
+CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS               NAMES
+
+$ docker start ad53c200194b
+ad53c200194b
+
+$ docker ps
+CONTAINER ID        IMAGE                        COMMAND             CREATED             STATUS              PORTS               NAMES
+ad53c200194b        niladridatta/alpine-custom   "sh"                3 minutes ago       Up 2 seconds                            alpine-custom
+
+$ docker attach ad53c200194b
+
++++
+
+$ docker stop ad53c200194b
+
+$ docker commit -m "Added test file and did docker commit <container-id>" ad53c200194b niladridatta/alpine-custom
+sha256:1e0bf1359edf649882a828394beb772fde2e1ff95b1716d9982496fa7fbdbb45
+
+$ docker push niladridatta/alpine-custom
+
++++
+
